@@ -1,68 +1,117 @@
-def GenerateBBSTArray(a):
-	a.sort()
-	result = []
-	if not a:
+def NodeCreator(a, result, point):
+	print(point)
+	print(result)
+	if point == len(a)//2:
 		return result
-	midPos = len(a)//2
-	result.append(a[midPos])
-	result = result + GenerateBBSTArray(a[:midPos]) + GenerateBBSTArray(a[midPos+1:])	
-	return result
+	less = []
+	greater = []
+	point_root = None
+	root_root = None
+	point_index = a.index(result[point])
 
-def F(a,res,count):
-    print("COUNT")
-    print(count)
-    print("RES")
-    print(res)
-    cont = True
-    less = []
-    greater = []
-    x = a.index(res[count])
-    if count == 0:
-        less = a[:x]
-        greater = a[x+1:]
-        print("LESS =", less)
-        res.append(less[len(less)//2])
-        res.append(greater[len(greater)//2])
-        count += 1
-    else:
-        
-        if res[count] < res[0]:
-            y = a.index(res[(count-1)//2])
-            less = a[:x]
-            greater = a[x+1:y]
-            print("LESS =", less)
-            print("GREATER =", greater)
-            if less:
-                res.append(less[len(less)//2])
-            else:
-                res.append(None)
-            if greater:
-                res.append(greater[len(greater)//2])
-            else:
-                res.append(None)
-        else:
-            y = a.index(res[(count-2)//2])
-            less = a[y+1:x]
-            greater = a[x+1:]
-            print("LESS =", less)
-            print("GREATER =", greater)
-            if less:
-                res.append(less[len(less)//2])
-            else:
-                res.append(None)
-            if greater:
-                res.append(greater[len(greater)//2])
-            else:
-                res.append(None)  
-        count += 1
-    print()
-    if count < len(a)-1:
-        return F(a,res,count)
-    else:
-        for i in range(res.count(None)):
-            res.remove(None)
-        return res
+	if point % 2 != 0:
+		point_root = int((point-1)/2)
+	else:
+		point_root = int((point-2)/2)
+	
+	if point_root is not 0:
+		if point_root % 2 != 0:
+			root_root = int((point_root-1)/2)
+		else:
+			root_root = int((point_root-2)/2)
 
-a = [1,2,3,4,5,6,7,8,9,10]
-res = [6]
-count = 0
+	else:
+		point_root = len(a)//2
+		if point % 2 != 0: 
+			less = a[:point_index]
+			print("LESS", less)
+			greater = a[point_index+1:point_root]
+			print("GREATER", greater)
+			if less:
+				result.append(less[len(less)//2])
+			if greater:
+				result.append(greater[len(greater)//2])
+			point += 1
+			return NodeCreator(a, result, point)
+		else:
+			less = a[point_root+1:point_index]
+			print("LESS", less)
+			greater = a[point_index+1:]
+			print("GREATER", greater)
+			if less:
+				result.append(less[len(less)//2])
+			if greater:
+				result.append(greater[len(greater)//2])
+			point += 1
+			return NodeCreator(a, result, point)
+
+	root_root = a.index(result[root_root])
+	point_root = a.index(result[point_root])
+
+	if result[point] < result[0]:
+		if point % 2 != 0:
+			less = a[:point_index]
+			print("LESS", less)
+			greater = a[point_index+1:point_root]
+			print("GREATER", greater)
+			if less:
+				result.append(less[len(less)//2])
+			if greater:
+				result.append(greater[len(greater)//2])
+			point += 1
+			return NodeCreator(a, result, point)
+		else:
+			less = a[point_root+1:point_index]
+			print("LESS", less)
+			greater = a[point_index+1:root_root]
+			print("GREATER", greater)
+			if less:
+				result.append(less[len(less)//2])
+			if greater:
+				result.append(greater[len(greater)//2])
+			point += 1
+			return NodeCreator(a, result, point)
+	
+	else:
+		if point % 2 != 0:
+			less = a[root_root+1:point_index]
+			print("LESS", less)
+			greater = a[point_index+1:point_root]
+			print("GREATER", greater)
+			if less:
+				result.append(less[len(less)//2])
+			if greater:
+				result.append(greater[len(greater)//2])
+			point += 1
+			return NodeCreator(a, result, point)
+		else:
+			less = a[point_root+1:point_index]
+			print("LESS", less)
+			greater = a[point_index+1:]
+			print("GREATER", greater)
+			if less:
+				result.append(less[len(less)//2])
+			if greater:
+				result.append(greater[len(greater)//2])
+			point += 1
+			return NodeCreator(a, result, point)
+
+def GenerateBBSTArray(a):
+	result = []
+	less = []
+	greater = []
+	point = 0
+	a.sort()
+	pivot_point = None
+	if a:
+		pivot_point = len(a)//2
+		result.append(a[pivot_point])
+		less = a[:pivot_point]
+		greater = a[pivot_point+1:]
+		if less:
+			result.append(less[len(less)//2])
+		if greater:
+			result.append(greater[len(greater)//2])
+		point += 1
+
+	return NodeCreator(a, result, point)
